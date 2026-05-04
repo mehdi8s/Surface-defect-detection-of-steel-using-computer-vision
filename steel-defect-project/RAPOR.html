@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yüzey Kusur Tespiti — Proje Raporu</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #444;
+      --line: #ccc;
+      --bg: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.4;
+      color: var(--ink);
+      background: var(--bg);
+      margin: 0 auto;
+      max-width: 190mm;
+      padding: 12mm 14mm 16mm 14mm;
+    }
+    @page { size: A4; margin: 11mm; }
+    @media print {
+      body { max-width: none; padding: 0; }
+      a { color: inherit; text-decoration: none; }
+      .no-print { display: none !important; }
+      .figure-block { break-inside: avoid; page-break-inside: avoid; }
+      .sample-strip { break-inside: avoid; page-break-inside: avoid; }
+    }
+    h1 {
+      font-size: 15pt;
+      margin: 0 0 4px 0;
+      font-weight: 700;
+    }
+    .subtitle { font-size: 10pt; color: var(--muted); margin-bottom: 8px; }
+    h2 {
+      font-size: 11.5pt;
+      margin: 12px 0 5px 0;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 3px;
+    }
+    h3 {
+      font-size: 10.5pt;
+      margin: 8px 0 3px 0;
+      font-weight: 600;
+    }
+    p { margin: 4px 0 7px 0; text-align: justify; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 6px 0 8px 0;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f0f0f0; font-weight: 600; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .meta { width: 100%; margin-bottom: 8px; }
+    .meta td { border: 1px solid var(--line); }
+    ul { margin: 4px 0 8px 20px; padding: 0; }
+    li { margin-bottom: 3px; }
+    .figure-stack {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .figure-block {
+      margin-bottom: 14px;
+    }
+    .figure-block img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #aaa;
+      margin: 0 auto;
+    }
+    .fig-label {
+      font-weight: 700;
+      font-size: 10pt;
+      margin: 6px 0 4px 0;
+    }
+    .fig-desc {
+      font-size: 9.5pt;
+      color: var(--ink);
+      line-height: 1.38;
+      margin: 0 0 4px 0;
+      text-align: justify;
+      padding: 0 2px 0 0;
+    }
+    .sample-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px 6px;
+      margin-top: 10px;
+    }
+    .sample-cell {
+      flex: 1 1 14%;
+      min-width: 78px;
+      max-width: calc(16.66% - 5px);
+      text-align: center;
+    }
+    .sample-cell img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #888;
+      display: block;
+      image-rendering: auto;
+    }
+    .sample-title {
+      font-weight: 700;
+      font-size: 8.5pt;
+      margin: 5px 0 2px 0;
+      line-height: 1.15;
+    }
+    .sample-desc {
+      font-size: 7.6pt;
+      line-height: 1.25;
+      color: #333;
+      text-align: center;
+      hyphens: auto;
+    }
+    .note {
+      font-size: 9pt;
+      color: var(--muted);
+      border-left: 3px solid #666;
+      padding-left: 9px;
+      margin-top: 8px;
+    }
+    .no-print {
+      margin-top: 14px;
+      padding: 8px 10px;
+      background: #f0f7ff;
+      border: 1px solid #bcd;
+      font-size: 9pt;
+    }
+    code { font-size: 9pt; background: #f5f5f5; padding: 0 3px; }
+  </style>
+</head>
+<body>
+
+  <h1>Çelik Şerit Yüzey Kusuru Sınıflandırması</h1>
+  <div class="subtitle">Bilgisayar Görme dersi — NEU-DET veri seti ile derin öğrenme tabanlı uygulama raporu</div>
+
+  <table class="meta">
+    <tr>
+      <th style="width:20%">Öğrenci</th>
+      <th style="width:40%">Ad Soyad</th>
+      <th style="width:40%">Öğrenci numarası</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><em>Mahdi Shahrouei</em></td>
+      <td><em>B221210559</em></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><em>Sefa Malkoç</em></td>
+      <td><em>B221210043</em></td>
+      <tr>
+        <td>2</td>
+        <td><em>Mehmet Horuz</em></td>
+        <td><em>B221210062</em></td>
+      </tr>
+    </tr>
+  </table>
+
+  <h2>1. Amaç ve kapsam</h2>
+
+  <p>
+    Endüstride sıcak haddelenmiş çelik şeritlerde yüzey kusurları kaliteyi doğrudan etkiler. Bu projede,
+    görüntüleri otomatik olarak <strong>altı tipik kusur sınıfından</strong> birine atayan bir
+    <strong>sınıflandırma (classification)</strong> sistemi kurduk. Amaç, operatör müdahalesini azaltmak ve hat üzerinde
+    hızlı, tekrarlanabilir karar desteği sağlamaktır.
+  </p>
+  <p>
+    Uygulama; veri yükleme, ön işleme ve artırma, <strong>ResNet-18</strong> ile eğitim, doğrulama metrikleri,
+    eğitim grafikleri ve <strong>tek görüntü tahmini</strong> (<code>predict.py</code>) adımlarını içerir.
+    Tüm doğrulama kümesi için toplu değerlendirme <code>evaluate.py</code> ile yapılmıştır.
+  </p>
+
+  <h2>2. Veri seti (NEU-DET)</h2>
+
+  <p>
+    <strong>NEU-DET</strong>, gri tonlamalı çelik yüzey görüntülerinden oluşur; veri seti alt klasör yapısı ile
+    sınıf etiketlerini taşır. Her sınıf için <strong>300</strong> örnek bulunur; yaygın bölünüşe uygun olarak
+    <strong>240 eğitim</strong> ve <strong>60 doğrulama</strong> görüntüsü kullanılmıştır (sınıf başı).
+  </p>
+  <table>
+    <tr><th>Sınıf (klasör adı)</th><th>Kısaltma</th><th>Eğitim / Doğrulama</th></tr>
+    <tr><td>crazing</td><td>Cr</td><td class="num">240 / 60</td></tr>
+    <tr><td>inclusion</td><td>In</td><td class="num">240 / 60</td></tr>
+    <tr><td>patches</td><td>Pa</td><td class="num">240 / 60</td></tr>
+    <tr><td>pitted_surface</td><td>PS</td><td class="num">240 / 60</td></tr>
+    <tr><td>rolled-in_scale</td><td>RS</td><td class="num">240 / 60</td></tr>
+    <tr><td>scratches</td><td>Sc</td><td class="num">240 / 60</td></tr>
+    <tr><th colspan="2">Toplam görüntü</th><th class="num">1440 eğitim + 360 doğrulama = 1800</th></tr>
+  </table>
+  <p>
+    Görüntüler tipik olarak <strong>200×200</strong> piksel civarındadır; model girişine <strong>224×224</strong>
+    boyutuna yeniden ölçeklenerek verilmiştir.
+  </p>
+
+  <h2>3. Yöntem, yazılım ve hiperparametreler</h2>
+
+  <h3>3.1 Mimari ve öğrenme</h3>
+
+  <ul>
+    <li><strong>Ortam:</strong> Python 3, PyTorch, torchvision, scikit-learn (raporlama), Matplotlib/Seaborn (grafik).</li>
+    <li><strong>Model:</strong> ResNet-18, ImageNet üzerinde ön-eğitilmiş ağırlıklar; son tam bağlı katman 6 sınıfa göre yeniden tanımlandı (transfer learning + ince ayar).</li>
+    <li><strong>Kayıp fonksiyonu:</strong> çok sınıflı çapraz entropi (cross-entropy).</li>
+    <li><strong>Optimizasyon:</strong> AdamW; ağırlık çökertmesi (weight decay) ile aşırı uyuma karşı hafif düzenleme.</li>
+    <li><strong>Erken durdurma:</strong> doğrulama doğruluğu iyileşmezse en fazla 6 epoch beklenip eğitim sonlandırıldı (bu koşuda toplam 11 epoch).</li>
+  </ul>
+
+  <h3>3.2 Ön işleme ve veri artırma</h3>
+
+  <ul>
+    <li>Gri görüntü, modelin beklediği <strong>3 kanal</strong> girişe kopyalandı.</li>
+    <li>Piksel değerleri tensöre çevrildikten sonra <strong>ortalama 0,5 / standart sapma 0,5</strong> ile normalize edildi.</li>
+    <li>Eğitimde: <strong>yatay çevirme</strong> ve <strong>küçük açılı rastgele döndürme</strong> ile çeşitlilik artırıldı; doğrulamada yalnızca ölçekleme ve normalizasyon kullanıldı.</li>
+  </ul>
+  <table>
+    <tr><th>Parametre</th><th>Değer</th></tr>
+    <tr><td>Girdi boyutu</td><td class="num">224 × 224</td></tr>
+    <tr><td>Toplu iş (batch) boyutu</td><td class="num">32</td></tr>
+    <tr><td>Öğrenme oranı</td><td class="num">5×10⁻⁴</td></tr>
+    <tr><td>Ağırlık çökertmesi</td><td class="num">1×10⁻⁴</td></tr>
+    <tr><td>Azami epoch</td><td class="num">25</td></tr>
+    <tr><td>Erken durdurma sabrı</td><td class="num">6 epoch</td></tr>
+  </table>
+
+  <h2>4. Deneysel sonuçlar</h2>
+
+  <p>
+    Doğrulama kümesinde (<strong>360</strong> örnek) elde edilen en iyi sonuçlar: <strong>doğruluk 1,00</strong>;
+    her sınıf için precision, recall ve F1-skoru <strong>1,00</strong>. Bu, veri setinin verilen bölünüşünde
+    sınıfların görünüm olarak iyi ayrıştığını ve seçilen mimarinin yeterli kapasiteye sahip olduğunu gösterir.
+  </p>
+  <p>
+    <strong>Yorum:</strong> Sonuçlar çok yüksektir; bu, aynı kaynak ve çekim koşullarındaki yeni şeritler için umut verici olsa da,
+    farklı hat, aydınlatma veya kamera ile elde edilen görüntülerde performansın ayrıca ölçülmesi gerekir (dış doğrulama / saha testi).
+  </p>
+  <table>
+    <tr><th>Özet metrik</th><th>Değer</th></tr>
+    <tr><td>Doğrulama doğruluğu (accuracy)</td><td class="num">1,000</td></tr>
+    <tr><td>Makro F1</td><td class="num">1,000</td></tr>
+    <tr><td>Ağırlıklı F1</td><td class="num">1,000</td></tr>
+    <tr><td>Koşum adı (çıktı klasörü)</td><td><code>baseline_resnet18_20260501_164325</code></td></tr>
+    <tr><td>Eğitilen epoch sayısı</td><td class="num">11</td></tr>
+    <tr><td>Not</td><td>Erken durdurma ile sonlandı</td></tr>
+  </table>
+
+  <h2>5. Şekiller ve kısa açıklamalar</h2>
+
+  <p style="font-size:9.5pt;color:#333;margin-bottom:6px">
+    Aşağıdaki grafikler tam sayfa genişliğine yakın gösterilmiştir; PDF’e aktarırken “Kenar boşlukları: Minimum” veya yatay mod seçerek okunabilirliği artırabilirsiniz.
+  </p>
+
+  <div class="figure-stack">
+    <div class="figure-block">
+      <img src="outputs/baseline_resnet18_20260501_164325/training_curves.png" alt="Eğitim ve doğrulama kaybı ile doğruluk eğrileri" />
+      <div class="fig-label">Şekil 1. Eğitim ve doğrulama eğrileri (kayıp ve doğruluk)</div>
+      <p class="fig-desc">
+        Sol grafik: her epoch sonunda ortalama <strong>kayıp (loss)</strong> — eğitim ve doğrulama için.
+        Sağ grafik: aynı epoch’larda <strong>sınıflandırma doğruluğu</strong>. Erken epoch’larda doğrulama dalgalanabilir;
+        model uyum sağladıkça doğruluk yükselir, kayıp genelde düşer. Erken durdurma, doğrulama performansı uzun süre iyileşmediğinde eğitimi keserek gereksiz epoch’ları önler.
+      </p>
+    </div>
+
+    <div class="figure-block">
+      <img src="outputs/baseline_resnet18_20260501_164325/confusion_matrix.png" alt="Doğrulama kümesi karışıklık matrisi" />
+      <div class="fig-label">Şekil 2. Doğrulama kümesi karışıklık matrisi (confusion matrix)</div>
+      <p class="fig-desc">
+        Satırlar <strong>gerçek etiket</strong>, sütunlar <strong>model tahmini</strong>dir. Köşegen (çapraz çizgi) yüksek ve koyu renkli ise tahminler doğru sınıfla örtüşüyor demektir.
+        Bu koşuda tüm örnekler doğru sınıfta olduğundan matris, yalnızca köşegen üzerinde yoğunluk gösterir; iki farklı sınıfın birbirine karıştığı hücreler pratikte boş kalır.
+      </p>
+    </div>
+  </div>
+
+  <h2>6. Veri setinden örnek görüntüler (sınıf başına bir örnek)</h2>
+  <p style="font-size:9.5pt;margin-bottom:6px">
+    Aşağıdaki küçük görseller <strong>NEU-DET doğrulama</strong> klasöründen alınmıştır (dosya adları: <code>*_241.jpg</code>).
+    Her biri bir kusur tipini temsil eder; model bu tür dokusal farklardan sınıf çıkarır.
+  </p>
+  <div class="fig-label">Şekil 3. Altı sınıf için tipik yüzey görünümü</div>
+  <div class="sample-strip">
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/crazing/crazing_241.jpg" alt="Crazing örneği" />
+      <div class="sample-title">Crazing (Cr)</div>
+      <div class="sample-desc">İnce çatlak ağı; yöneli çizgiler.</div>
+    </div>
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/inclusion/inclusion_241.jpg" alt="Inclusion örneği" />
+      <div class="sample-title">Inclusion (In)</div>
+      <div class="sample-desc">Koyu lekeler; yabancı madde izi.</div>
+    </div>
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/patches/patches_241.jpg" alt="Patches örneği" />
+      <div class="sample-title">Patches (Pa)</div>
+      <div class="sample-desc">Yama biçiminde bölgesel fark.</div>
+    </div>
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/pitted_surface/pitted_surface_241.jpg" alt="Pitted surface örneği" />
+      <div class="sample-title">Pitted surface (PS)</div>
+      <div class="sample-desc">Noktasal çökükler; delikli doku.</div>
+    </div>
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/rolled-in_scale/rolled-in_scale_241.jpg" alt="Rolled-in scale örneği" />
+      <div class="sample-title">Rolled-in scale (RS)</div>
+      <div class="sample-desc">Haddede sıkışmış ölçek deseni.</div>
+    </div>
+    <div class="sample-cell">
+      <img src="../NEU-DET/validation/images/scratches/scratches_241.jpg" alt="Scratches örneği" />
+      <div class="sample-title">Scratches (Sc)</div>
+      <div class="sample-desc">Belirgin çizik çizgileri.</div>
+    </div>
+  </div>
+
+ 
+
+</body>
+</html>
