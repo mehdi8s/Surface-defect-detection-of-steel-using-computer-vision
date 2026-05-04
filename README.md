@@ -35,18 +35,6 @@ Detaylı akademik açıklamalar için kök dizindeki **`Rapor.pdf`** ve `steel-d
 
 ---
 
-## Yazarlar
-
-| Ad Soyad          | Öğrenci no   |
-|-------------------|--------------|
-| Mahdi Shahrouei   | B221210559   |
-| Sefa Malkoç       | B221210043   |
-| Mehmet Horuz      | B221210062   |
-
-*Proje, Bilgisayar Görüsi dersi kapsamında NEU-DET veri seti ile hazırlanmıştır.*
-
----
-
 ## Veri seti (NEU-DET)
 
 **NEU-DET**, gri tonlamalı çelik yüzey görüntülerinden oluşur; sınıf etiketleri klasör yapısı ile taşınır. Bu çalışmada sınıf başına **300** görüntü kullanılmış; standart bölünüşe uygun olarak **240 eğitim** ve **60 doğrulama** görüntüsü **sınıf başına** ayrılmıştır.
